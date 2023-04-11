@@ -6,10 +6,10 @@
       <van-cell>
         <!-- 使用 title 插槽来自定义标题 -->
         <template #icon>
-          <img :src="userPro.photo" alt="" class="avatar">
+          <img :src="$store.state.userphoto || userPro.photo" alt="" class="avatar">
         </template>
         <template #title>
-          <span class="username">{{userPro.name}}</span>
+          <span class="username">{{$store.state.username || userPro.name}}</span>
         </template>
         <template #label>
           <van-tag color="#fff" text-color="#007bff">申请认证</van-tag>
@@ -35,7 +35,7 @@
     <!-- 操作面板 -->
     <van-cell-group class="action-card">
       <van-cell icon="edit" title="编辑资料" is-link to="/userinfo" />
-      <van-cell icon="chat-o" title="小思同学" is-link />
+      <van-cell icon="chat-o" title="小思同学" is-link to="/chat"/>
       <van-cell icon="warning-o" title="退出登录" is-link @click="logout"/>
     </van-cell-group>
   </div>
@@ -47,6 +47,7 @@ import { getUserProAPI } from '@/api/index'
 import { Dialog } from 'vant'
 
 export default {
+  name: 'User',
   data () {
     return {
       userPro: {}
@@ -73,6 +74,8 @@ export default {
   async created () {
     const res = await getUserProAPI()
     this.userPro = res.data.data
+    this.$store.commit('SET_USERPHOTO', this.userPro.photo)
+    this.$store.commit('SET_USERNAME', this.userPro.name)
   }
 }
 </script>

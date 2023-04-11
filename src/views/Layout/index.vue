@@ -1,13 +1,20 @@
 <template>
   <div>
     <div class="home_container">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
+
     <div>
       <!--底部导航栏    -->
-      <van-tabbar v-model="active">
-        <van-tabbar-item icon="home-o" fixed route to="/layout/home">首頁</van-tabbar-item>
-        <van-tabbar-item icon="friends-o" fixed route to="/layout/user">我的</van-tabbar-item>
+      <van-tabbar v-model="active" route>
+        <van-tabbar-item icon="home-o" name="home" fixed route to="/layout/home"
+          >首頁</van-tabbar-item
+        >
+        <van-tabbar-item icon="friends-o" name="user" fixed route to="/layout/user"
+          >我的</van-tabbar-item
+        >
       </van-tabbar>
     </div>
   </div>
@@ -18,7 +25,7 @@ export default {
   name: 'Layout',
   data () {
     return {
-      active: 0
+      active: 'home'
     }
   }
 }

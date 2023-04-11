@@ -56,6 +56,7 @@
 <script>
 import { suggestionAPI } from '@/api/index'
 export default {
+  name: 'Search',
   data () {
     return {
       kw: '', // 搜索关键字

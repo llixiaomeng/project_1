@@ -8,6 +8,8 @@
       @click-left="$router.back()"
     />
 
+    <van-loading color="#1989fa" vertical v-if="articleObj.title===undefined">加载中...</van-loading>
+
     <!-- 文章信息区域 -->
     <div class="article-container">
       <!-- 文章标题 -->
@@ -87,6 +89,7 @@ import {
 import CommentList from '@/views/ArticleDetail/CommentList.vue'
 import { timeAgo } from '@/utils/date'
 export default {
+  name: 'ArticleDetail',
   data () {
     return {
       articleObj: {}, // 含关注作者、点赞文章，create时挂到data相关数据上。点击动作关联data和接口函数
@@ -175,5 +178,9 @@ export default {
 .like-box {
   display: flex;
   justify-content: center;
+}
+
+/deep/ .van-loading{
+  padding-top: 46px;
 }
 </style>

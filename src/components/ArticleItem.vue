@@ -11,18 +11,18 @@
             v-if="artListObj.cover.type === 1"
             :src="artListObj.cover.images[0]"
           /> -->
-          <van-image :src="artListObj.cover.images[0]" class="thumb" v-if="artListObj.cover.type === 1">
+          <van-image lazy-load :src="artListObj.cover.images[0]" class="thumb" v-if="artListObj.cover.type === 1">
            <template v-slot:error>加载失败</template>
           </van-image>
         </div>
         <div class="thumb-box" v-if="artListObj.cover.type > 1">
-          <van-image class="thumb" :src="artListObj.cover.images[0]">
+          <van-image lazy-load class="thumb" :src="artListObj.cover.images[0]">
             <template v-slot:error>加载失败</template>
           </van-image>
-          <van-image class="thumb" :src="artListObj.cover.images[1]">
+          <van-image lazy-load class="thumb" :src="artListObj.cover.images[1]">
             <template v-slot:error>加载失败</template>
           </van-image>
-          <van-image class="thumb" :src="artListObj.cover.images[2]">
+          <van-image lazy-load class="thumb" :src="artListObj.cover.images[2]">
             <template v-slot:error>加载失败</template>
           </van-image>
           <!-- <img class="thumb" :src="artListObj.cover.images[0]" />

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <router-view></router-view>
+    <keep-alive exclude="ArticleDetail,Login,Search,SearchResult,UserInfo">
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 

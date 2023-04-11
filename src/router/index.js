@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login'
-import Home from '../views/Home'
+// import Home from '../views/Home'
 import Layout from '../views/Layout'
-import User from '../views/User'
-import Search from '../views/Search/index.vue'
-import SearchResult from '../views/Search/searchResult.vue'
-import ArticleDetail from '@/views/ArticleDetail'
-import UserInfo from '@/views/User/userInfo'
+// import User from '../views/User'
+// import Search from '../views/Search/index.vue'
+// import SearchResult from '../views/Search/searchResult.vue'
+// import ArticleDetail from '@/views/ArticleDetail'
+// import UserInfo from '@/views/User/userInfo'
+// import Chat from '@/views/Chat'
+import { getToken } from '@/utils/token'
 
 Vue.use(VueRouter)
 
@@ -18,7 +20,11 @@ const routes = [
   },
   {
     path: '/login',
-    component: Login
+    component: Login,
+    beforeEnter (to, from, next) {
+      if (getToken()?.length > 0) return next(false)
+      next()
+    }
   },
   {
     path: '/layout',
@@ -27,29 +33,36 @@ const routes = [
     children: [
       {
         path: 'home',
-        component: Home
+        component: () => import(/* webpackChunkNme:"Home" */ '../views/Home'),
+        meta: {
+          scrollT: 0
+        }
       },
       {
         path: 'user',
-        component: User
+        component: () => import(/* webpackChunkNme:"User" */ '../views/User')
       }
     ]
   },
   {
     path: '/userinfo',
-    component: UserInfo
+    component: () => import(/* webpackChunkNme:"UserInfo" */ '@/views/User/userInfo')
   },
   {
     path: '/search',
-    component: Search
+    component: () => import(/* webpackChunkNme:"Search" */ '../views/Search/index.vue')
   },
   {
     path: '/search/:keyword',
-    component: SearchResult
+    component: () => import(/* webpackChunkNme:"SearchResult" */ '../views/Search/searchResult.vue')
   },
   {
     path: '/articledetail',
-    component: ArticleDetail
+    component: () => import(/* webpackChunkNme:"ArticleDetail" */ '@/views/ArticleDetail')
+  },
+  {
+    path: '/chat',
+    component: () => import(/* webpackChunkNme:"Chat" */ '@/views/Chat')
   }
 ]
 

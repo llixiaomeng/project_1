@@ -1,6 +1,6 @@
 // 统一封装接口方法，每个方法负责请求一个url并暴露
 // 逻辑页面导入该方法就可以发请求
-import { getToken } from '@/utils/token.js'
+import { getToken, getRefreshToken } from '@/utils/token.js'
 import request from '../utils/request.js'
 
 // 根据需求设置接口方法并暴露，逻辑页面import {apiname} from ???
@@ -13,6 +13,14 @@ export const loginAPI = ({ mobile, code }) => request({
   url: '/v1_0/authorizations',
   method: 'POST',
   data: { mobile, code }
+})
+
+export const refreshAPI = () => request({
+  url: '/v1_0/authorizations',
+  method: 'PUT',
+  headers: {
+    Authorization: `Bearer ${getRefreshToken()}`
+  }
 })
 
 // 获取所有频道、获取用户频道、更新用户频道

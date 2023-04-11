@@ -9,7 +9,7 @@
       </template>
     </van-nav-bar>
 
-    <van-tabs v-model="activeid" animated sticky offset-top="1.226667rem">
+    <van-tabs v-model="activeid" animated sticky offset-top="1.226667rem" @change="listChange" :before-change="beforeChange">
       <van-tab v-for="item in userChannels" :key="item.id" :title="item.name" :name="item.id">
         <!--文章列表-->
         <ArticleList :channelId="item.id" />
@@ -46,7 +46,8 @@ export default {
       activeid: 0,
       userChannels: [],
       allChannels: [],
-      show: false
+      show: false,
+      scrollLen: {}
     }
   },
   methods: {
@@ -90,6 +91,21 @@ export default {
       // 关闭频道界面；改active值为选中的seq-1=index
       this.show = false
       this.activeid = channelId
+    },
+    listChange (name, title) {
+      this.$nextTick(() => {
+        document.documentElement.scrollTop = this.scrollLen[this.activeid]
+      })
+    },
+    // scollRem (obj) {
+    //   this.scrolllen = obj.scrollTop
+    // },
+    beforeChange () {
+      this.scrollLen[this.activeid] = document.documentElement.scrollTop
+      return true
+    },
+    scrollFn () {
+      this.$route.meta.scrollT = document.documentElement.scrollTop
     }
   },
   async created () {
@@ -97,6 +113,15 @@ export default {
     const resall = await getAllChannels()
     this.userChannels = res.data.data.channels
     this.allChannels = resall.data.data.channels
+  },
+  activated () {
+    // 失活时保存滚动距离
+    // 激活时取出
+    window.addEventListener('scroll', this.scrollFn)
+    document.documentElement.scrollTop = this.$route.meta.scrollT
+  },
+  deactivated () {
+    window.addEventListener('scroll', this.scrollFn)
   },
   components: {
     ArticleList,

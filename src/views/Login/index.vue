@@ -31,7 +31,7 @@
 <script>
 import { loginAPI } from '@/api/index'
 import { Notify } from 'vant'
-import { setToken } from '@/utils/token'
+import { setToken, setRefreshToken } from '@/utils/token'
 
 export default {
   name: 'Login',
@@ -50,12 +50,10 @@ export default {
       this.isloading = true
       try {
         const res = await loginAPI(values)
-        // re:e64b2b9e-ec6b-4947-9e96-15f613d6ed04
         const { data: tokendata } = res.data
         console.log(tokendata)
         // const res2 = await refreshTokenApi(tokendata.refresh_token)
-        // console.log(res2)
-        // setToken(res2.data.data.token)
+        setRefreshToken(tokendata.refresh_token)
         setToken(tokendata.token)
         this.$router.replace({
           path: '/layout/home'

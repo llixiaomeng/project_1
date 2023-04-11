@@ -50,23 +50,26 @@
       <input type="text" v-autofocus v-model.trim="changename" />
     </van-dialog>
 
-    <van-popup v-model="showData" position="bottom" :style="{ height: '30%' }" @confirm="confirmData" @cancel="showData = false">
+    <van-popup v-model="showData" position="bottom" :style="{ height: '30%' }" round>
       <van-datetime-picker
         v-model="currentDate"
         type="date"
         title="选择年月日"
         :min-date="minDate"
         :max-date="maxDate"
+        v-show="showData"
+        @cancel="showData = false"
+        @confirm="confirmData"
       />
     </van-popup>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
 import { getUserProAPI, updatePhotoAPI, updateProAPI } from '@/api/index'
 import { Notify } from 'vant'
 export default {
+  name: 'UserInfo',
   data () {
     return {
       userPro: {},
@@ -74,7 +77,7 @@ export default {
       show: false,
       showData: false,
       minDate: new Date(1923, 0, 1),
-      maxDate: new Date(),
+      maxDate: new Date(), // 当前日期，date对象
       currentDate: new Date()
     }
   },
@@ -86,6 +89,7 @@ export default {
       formObj.append('photo', e.target.files[0])
       const res = await updatePhotoAPI(formObj)
       this.userPro.photo = res.data.data.photo
+      this.$store.commit('SET_USERPHOTO', this.userPro.photo)
     },
     changeName () {
       this.show = true
@@ -99,6 +103,7 @@ export default {
         if (nameReg.test(this.changename)) {
           await updateProAPI({ name: this.changename })
           this.userPro.name = this.changename
+          this.$store.commit('SET_USERNAME', this.userPro.name)
           done()
         } else {
           done(false)
@@ -114,12 +119,13 @@ export default {
     },
     showPopup () {
       this.showData = true
-      // 默认自己的生日
+      // 当前日期默认自己的生日
       this.currentDate = new Date(this.userPro.birthday)
+      // 最大时间为“今天”
     },
     async confirmData (value) {
-      // 确认时间传给api&显示在页面
-      const datestring = moment(value).format('YYYY-MM-DD')
+      // 确认时间str传给api&显示在页面
+      const datestring = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`
       await updateProAPI({ birthday: datestring })
       this.userPro.birthday = datestring
       this.showData = false

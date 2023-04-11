@@ -34,6 +34,7 @@
 import { searchResultsAPI } from '@/api/index'
 import ArticleItem from '@/components/ArticleItem.vue'
 export default {
+  name: 'SearchResult',
   data () {
     return {
       kw: this.$route.params.keyword,

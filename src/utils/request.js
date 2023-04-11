@@ -2,7 +2,8 @@
 import theAxios from 'axios'
 import router from '@/router'
 import { Notify } from 'vant'
-import { getToken } from './token'
+import { getToken, setToken } from './token'
+import { refreshAPI } from '@/api/index'
 const axios = theAxios.create({
   baseURL: 'http://toutiao.itheima.net/',
   timeout: 20000
@@ -17,6 +18,18 @@ axios.interceptors.response.use(function (response) {
   // 响应状态码4xx/5xx进这里，对响应错误做点什么
   if (error.response.status === 401) { // 身份过期
     // token续签方式1:  去登录页重新登录
+    // localStorage.clear()
+    // Notify({ type: 'warning', message: '请重新登录' })
+    // router.replace({ path: '/login' })
+
+    // token续签方式2: 无感自动刷新&重新发送失败请求
+    const res = await refreshAPI()
+    setToken(res.data.data.token)
+    error.config.headers.Authorization = `Bearer ${res.data.data.token}`
+    return axios(error.config)
+  } else if (error.response.status === 500 && error.config.url === '/v1_0/authorizations' && error.config.method === 'put') {
+    // refreshToken过期怎么办
+    localStorage.clear()
     Notify({ type: 'warning', message: '请重新登录' })
     router.replace({ path: '/login' })
   }
